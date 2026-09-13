@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://bq6x60e10vgp" path="res://core/exercise/exercise_session.gd" id="2_session"]
 [ext_resource type="Script" path="res://core/exercise/tracking_stability.gd" id="3_stability"]
 [ext_resource type="Script" path="res://maps/map_5/map5_controller.gd" id="4_controller"]
-[ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://shared/characters/player/player.tscn" id="5_player"]
+[ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://maps/shared/characters/player/player.tscn" id="5_player"]
 [ext_resource type="PackedScene" path="res://maps/map_5/placeholders/map_5_background.tscn" id="6_background"]
 [ext_resource type="PackedScene" path="res://maps/map_5/placeholders/map_5_rest_zone.tscn" id="7_rest"]
 [ext_resource type="PackedScene" path="res://maps/map_5/placeholders/map_5_pose_guide.tscn" id="9_pose"]
