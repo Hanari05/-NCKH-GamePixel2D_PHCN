@@ -31,8 +31,10 @@ func _run() -> void:
 	await _wait_for_session_state(session, ExerciseSession.State.ACTIVE)
 	assert(str(PoseInput.last_exercise_request.get("exercise_id", "")) == "hands_behind_head")
 	assert(int(PoseInput.last_exercise_request.get("hold_duration_ms", 0)) == 5000)
-	assert(int(PoseInput.last_exercise_request.get("repetitions_per_phase", 0)) == 5)
-	assert(int(PoseInput.last_exercise_request.get("phase_count", 0)) == 2)
+	assert(int(session.config["repetitions_per_phase"]) == 5)
+	assert(int(session.config["phase_count"]) == 2)
+	for field in ["repetitions_per_phase", "phase_count", "rest_duration_ms"]:
+		assert(not PoseInput.last_exercise_request.has(field))
 
 	for _index in range(5):
 		await _complete_one_hold(map4)
