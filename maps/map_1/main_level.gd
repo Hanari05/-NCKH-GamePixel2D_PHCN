@@ -12,7 +12,7 @@ const EXERCISE_CONFIGS := {
 }
 
 var obstacle_scene = preload("res://maps/map_1/obstacle.tscn")
-var star_scene = preload("res://shared/collectibles/star/star.tscn")
+var star_scene = preload("res://maps/shared/collectibles/star/star.tscn")
 
 var score = 0.0 
 var star_score = 0 

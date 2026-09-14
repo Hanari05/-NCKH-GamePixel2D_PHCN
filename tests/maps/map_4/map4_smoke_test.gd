@@ -51,7 +51,9 @@ func _run() -> void:
 	assert(int(map4.steps_completed) == 10)
 	assert(session.state == ExerciseSession.State.COMPLETED)
 	assert(level.get_node("World/Map4ClimbTrack/Step_10/SummitVisual").visible)
-	assert(is_equal_approx(level.get_node("Player").global_position.y, level.get_node("World/Map4ClimbTrack/Step_00/RunStart").global_position.y, 2.0))
+	var player_y: float = level.get_node("Player").global_position.y
+	var run_start_y: float = level.get_node("World/Map4ClimbTrack/Step_00/RunStart").global_position.y
+	assert(absf(player_y - run_start_y) <= 2.0)
 	assert(observed_hold_progress.has(1.0))
 
 	await get_tree().create_timer(1.1).timeout
