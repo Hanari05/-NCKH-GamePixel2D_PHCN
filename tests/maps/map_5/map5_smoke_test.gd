@@ -38,7 +38,9 @@ func _run() -> void:
 		assert(not PoseInput.last_exercise_request.has(field))
 	assert(map5.is_action_window_open())
 	assert(map5.get_side_label() == "TAY TRÁI")
-	assert(is_equal_approx(level.get_node("Player").global_position, level.get_node("Map5RestZone/PlayerAnchor").global_position))
+	var player_position: Vector2 = level.get_node("Player").global_position
+	var anchor_position: Vector2 = level.get_node("Map5RestZone/PlayerAnchor").global_position
+	assert(player_position.is_equal_approx(anchor_position))
 
 	PoseInput.simulate_rejected_hold()
 	await get_tree().process_frame
