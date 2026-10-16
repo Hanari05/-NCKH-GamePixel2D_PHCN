@@ -254,7 +254,8 @@ func _complete_session() -> void:
 		"started_at_utc": _started_at,
 		"completed_at_utc": Time.get_datetime_string_from_system(true),
 		"stability": stability,
-		"evaluation": "HOÀN HẢO" if stability >= 3 else ("HOÀN THÀNH" if stability == 2 else "CẦN CẢI THIỆN ĐỘ ỔN ĐỊNH"),
+		"stability_enabled": TrackingStability.ENABLED,
+		"evaluation": "HOÀN THÀNH" if not TrackingStability.ENABLED else ("HOÀN HẢO" if stability >= 3 else ("HOÀN THÀNH" if stability == 2 else "CẦN CẢI THIỆN ĐỘ ỔN ĐỊNH")),
 		"exercise_id": exercise_id,
 		"valid_reps": total_valid_reps,
 		"rejected_reps": total_rejected_reps,
@@ -264,7 +265,7 @@ func _complete_session() -> void:
 	if bonus_controller != null:
 		summary["bonus_points"] = int(bonus_controller.bonus_points)
 	# Commit results before the finishing animation or a scene change can interrupt it.
-	if tracker != null and stability >= 2:
+	if not TrackingStability.ENABLED or (tracker != null and stability >= 2):
 		Global.unlock_level_for_action(_map_id, mini(_difficulty + 1, 3))
 	Global.record_session(summary)
 	session_completed.emit(summary)

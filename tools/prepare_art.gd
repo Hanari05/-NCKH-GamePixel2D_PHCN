@@ -10,7 +10,7 @@ func _initialize() -> void:
 			sources = argument.trim_prefix("--source-assets=").trim_suffix("/")
 	var root := sources + "/itch.io/Legacy-Fantasy - High Forest 2.0/Legacy-Fantasy - High Forest 2.3/"
 	if not FileAccess.file_exists(root + "Assets/Tiles.png"):
-		push_error("Source packs are archived. Pass --source-assets=<archive>/assets; see ASSET_CLEANUP_REPORT.md.")
+		push_error("Source packs are archived. Pass --source-assets=<archive>/assets; see HANDOFF_BE.txt.")
 		quit(1)
 		return
 	var out := "res://assets/shared/environment/"

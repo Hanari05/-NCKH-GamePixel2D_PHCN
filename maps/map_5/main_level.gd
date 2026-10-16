@@ -156,7 +156,7 @@ func _on_session_completed(summary: Dictionary) -> void:
 	var unlock_text := "Chưa mở cấp độ tiếp theo."
 	if _difficulty_level() >= 3:
 		unlock_text = "Đã hoàn thành cấp độ cao nhất."
-	elif stability >= 2:
+	elif not TrackingStability.ENABLED or stability >= 2:
 		unlock_text = "Cấp độ tiếp theo đã sẵn sàng."
 	result_label.text = "HOÀN THÀNH MAP 5\n\nLần căng hợp lệ: %d\nLần chưa hợp lệ: %d\nĐiểm thưởng: %d/100\nỔn định còn lại: %d/3\nĐánh giá: %s\n%s" % [
 		int(summary.get("valid_reps", 0)),
@@ -166,6 +166,8 @@ func _on_session_completed(summary: Dictionary) -> void:
 		_stability_evaluation(stability),
 		unlock_text,
 	]
+	if not TrackingStability.ENABLED:
+		result_label.text = result_label.text.replace("Ổn định còn lại: %d/3\n" % stability, "")
 	result_panel.show()
 
 
@@ -267,7 +269,7 @@ func _difficulty_level() -> int:
 
 
 func _unlock_next_difficulty(stability: int) -> bool:
-	if stability < 2 or _difficulty_level() >= 3:
+	if (TrackingStability.ENABLED and stability < 2) or _difficulty_level() >= 3:
 		return false
 	var previous_highest: int = Global.get_highest_unlocked_level(5)
 	Global.unlock_level_for_action(5, _difficulty_level() + 1)
@@ -275,6 +277,8 @@ func _unlock_next_difficulty(stability: int) -> bool:
 
 
 func _stability_evaluation(stability: int) -> String:
+	if not TrackingStability.ENABLED:
+		return "HOÀN THÀNH"
 	if stability >= 3:
 		return "HOÀN HẢO"
 	if stability == 2:

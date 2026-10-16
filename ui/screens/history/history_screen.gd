@@ -12,6 +12,8 @@ func _ready() -> void:
 			str(entry.get("completed_at_utc", "")).replace("T", " "), int(entry.get("map_id", 1)),
 			int(entry.get("difficulty", 1)), int(entry.get("valid_reps", 0)), int(entry.get("rejected_reps", 0)),
 			int(entry.get("stability", 0)), str(entry.get("evaluation", ""))]
+		if not TrackingStability.ENABLED or not bool(entry.get("stability_enabled", true)):
+			text = text.replace("  •  Ổn định: %d/3" % int(entry.get("stability", 0)), "")
 		if entry.has("bonus_points"):
 			text += "  •  Điểm thưởng: %d" % int(entry.bonus_points)
 		_add_entry(list, text)

@@ -8,3 +8,9 @@ __MACOSX/
 # Temporary image/editor backups
 *.png~
 *.aseprite~
+
+# Generated test captures/profiles (never player saves)
+tests/visual_output/
+tests/visual/captures/
+tests/*.json
+tests/*.json.bak

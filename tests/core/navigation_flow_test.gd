@@ -34,7 +34,7 @@ func _run() -> void:
 	await get_tree().scene_changed
 	for action in range(1, 6):
 		var map_button := "Button" if action == 1 else "Button%d" % action
-		get_tree().current_scene.get_node("ScrollContainer/HBoxContainer/" + map_button).pressed.emit()
+		get_tree().current_scene.get_node("MapRows/" + ("TopRow/" if action <= 3 else "BottomRow/") + map_button).pressed.emit()
 		await get_tree().scene_changed
 		assert(Global.selected_action == action)
 		assert(get_tree().current_scene.get_node("VBoxContainer/Button2").disabled)
@@ -53,9 +53,9 @@ func _run() -> void:
 		PoseInput.set_tracking(false)
 		await get_tree().create_timer(0.08).timeout
 		assert(session.state == ExerciseSession.State.TRACKING_LOST)
-		assert(level.tracking_stability.stability == 2)
+		assert(level.tracking_stability.stability == (2 if TrackingStability.ENABLED else 3))
 		await get_tree().create_timer(0.08).timeout
-		assert(level.tracking_stability.stability == 2)
+		assert(level.tracking_stability.stability == (2 if TrackingStability.ENABLED else 3))
 		var menu := level.get_node("SettingsMenu")
 		menu.open_menu()
 		menu.close_menu()
@@ -64,7 +64,7 @@ func _run() -> void:
 		assert(session.state == ExerciseSession.State.ACTIVE)
 		PoseInput.close_connection()
 		await get_tree().create_timer(0.08).timeout
-		assert(level.tracking_stability.stability == 2)
+		assert(level.tracking_stability.stability == (2 if TrackingStability.ENABLED else 3))
 		PoseInput.open_connection()
 		assert(session.state == ExerciseSession.State.ACTIVE)
 		menu.open_menu()

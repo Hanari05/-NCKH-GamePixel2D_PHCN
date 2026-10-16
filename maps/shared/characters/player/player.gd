@@ -26,8 +26,10 @@ func _ready() -> void:
 	lives = max_lives
 	for child in visuals.get_children():
 		if child is CanvasItem and child.name != "Shadow": child.hide()
-	mk2 = preload("res://maps/shared/characters/player/exercise_actor.gd").new()
+	mk2 = preload("res://maps/shared/characters/player/gameplay_actor.gd").new()
 	mk2.name = "Mk2"
+	mk2.map_id = clampi(Global.selected_action,1,5)
+	if mk2.map_id == 5: mk2.position.y = 44
 	mk2.z_index = 30
 	mk2.pose_id = [3,0,4,1,2][clampi(Global.selected_action,1,5)-1]
 	mk2.outfit_enabled = true
@@ -38,6 +40,13 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	var session := get_parent().get_node_or_null("ExerciseSession")
+	mk2.visual_active = session != null and session.state == ExerciseSession.State.ACTIVE
+	mk2.running = _running
+	if mk2.visual_active:
+		mk2.advance(delta)
+	else:
+		mk2.refresh()
 	if _running:
 		_run_clock += delta
 		var stride := sin(_run_clock * 12.0)
@@ -68,21 +77,18 @@ func _physics_process(delta):
 
 
 func play_exercise_action() -> void:
-	if is_instance_valid(mk2):
-		mk2.amount = 1
-		mk2.refresh()
 	if is_instance_valid(_action_tween):
 		_action_tween.kill()
-	body_shape.color = Color(1.0, 0.72, 0.15)
-	visuals.scale = Vector2.ONE
+	mk2.burst = 1.0
+	if mk2.map_id in [4,5]:
+		mk2.refresh()
+		return
+	mk2.amount = 1.0
+	mk2.refresh()
 	_action_tween = create_tween()
-	_action_tween.tween_property(visuals, "scale", Vector2(1.25, 0.9), 0.12)
-	_action_tween.tween_property(visuals, "scale", Vector2.ONE, 0.18)
-	_action_tween.tween_callback(func(): body_shape.color = Color(0.20, 0.45, 0.85))
-	_action_tween.tween_callback(func():
-		mk2.amount = 0
-		mk2.refresh())
-	
+	_action_tween.tween_interval(0.25)
+	_action_tween.tween_property(mk2,"amount",0.0,0.2)
+	_action_tween.tween_callback(mk2.refresh)
 
 func set_running(enabled: bool) -> void:
 	_running = enabled

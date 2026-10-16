@@ -52,8 +52,11 @@ func _ready() -> void:
 	level = get_parent()
 	map_id = int(level.scene_file_path.get_slice("map_",1).get_slice("/",0))
 	session = level.get_node("ExerciseSession")
+	AudioManager.attach_level.call_deferred(level, map_id)
 	ui = level.get_node("UI")
 	if map_id == 4: level.get_node("Player/FollowCamera").position.y = -20
+	# Gameplay actor now renders animated pixel steam instead of static diamonds.
+	if map_id == 5: level.get_node("Map5RestZone/Steam").hide()
 	for name in ["HudBacking","HudLeftBacking","HudRightBacking","DebugHelp","BonusPanel"]:
 		var node := ui.get_node_or_null(name)
 		if node != null: node.hide()
@@ -86,6 +89,7 @@ func _ready() -> void:
 	level.feedback_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	level.feedback_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	level.feedback_label.add_theme_font_size_override("font_size",20)
+	level.hearts_label.visible = TrackingStability.ENABLED
 	place(level.hearts_label,Rect2(940,24,200,32))
 	level.hearts_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	level.hearts_label.add_theme_font_size_override("font_size",20)
@@ -106,8 +110,7 @@ func _ready() -> void:
 		place(hold.get_node("HoldBar"),Rect2(0,28,516,12))
 	place(level.rest_label,Rect2(280,122,592,86))
 	level.rest_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	button("Xem hướng dẫn [U]",Rect2(24,596,246,44),_review)
-	button("Ẩn/hiện khớp [I]",Rect2(288,596,252,44),_joints)
+	button("Xem hướng dẫn [U]",Rect2(24,596,516,44),_review)
 	var camera := ColorRect.new()
 	camera.position = Vector2(608,368)
 	camera.size = Vector2(480,270)
@@ -155,7 +158,7 @@ func _build_intro() -> void:
 
 func _hold(progress: float, _elapsed: int, _target: int) -> void:
 	var actor = level.get_node("Player").mk2
-	actor.amount = clampf(progress*4,0,1)
+	actor.amount = clampf(progress,0,1)
 	actor.refresh()
 
 func _reset_actor() -> void:
@@ -177,6 +180,8 @@ func _review() -> void:
 	session.set_menu_paused(true)
 	get_tree().paused = true
 	replay = Control.new()
+	# Keep replay controls interactive while the gameplay tree is paused.
+	replay.process_mode = Node.PROCESS_MODE_ALWAYS
 	replay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	ui.add_child(replay)
 	var shade := ColorRect.new()

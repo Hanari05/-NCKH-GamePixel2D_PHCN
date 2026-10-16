@@ -45,9 +45,9 @@ trigger_path = NodePath("CanvasLayer/SettingsButton")
 
 [node name="Title" type="Label" parent="CanvasLayer"]
 offset_left = 220.0
-offset_top = 260.0
+offset_top = 78.0
 offset_right = 932.0
-offset_bottom = 328.0
+offset_bottom = 146.0
 text = "HÀNH TRÌNH VẬN ĐỘNG"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 40
